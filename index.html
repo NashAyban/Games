@@ -540,7 +540,7 @@
             scoreDisplay.textContent = score;
             totalPairs.textContent = pairs.length;
             
-            // Shuffle and render cards
+            // Shuffle BOTH columns independently - this creates the scrambled effect!
             const shuffledLeft = shuffle([...pairs]);
             const shuffledRight = shuffle([...pairs]);
             
