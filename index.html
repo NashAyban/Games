@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Type Game Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .title-input {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            border: none;
+            border-bottom: 3px solid #4caf50;
+            padding: 5px;
+            flex: 1;
+            outline: none;
+        }
+
+        .title-display {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-edit {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #45a049;
+        }
+
+        .btn-play {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-play:hover {
+            background: #1976d2;
+        }
+
+        .btn-stop {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-stop:hover {
+            background: #d32f2f;
+        }
+
+        .btn-add {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-add:hover {
+            background: #45a049;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+        }
+
+        .btn-edit-pair {
+            background: #2196f3;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .btn-edit-pair:hover {
+            background: #1976d2;
+        }
+
+        .btn-save {
+            background: #4caf50;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .btn-cancel {
+            background: #757575;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .editor-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .editor-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .add-pair-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .add-pair-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .pairs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pair-item {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .pair-text {
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .pair-arrow {
+            color: #999;
+            font-size: 20px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        .game-panel {
+            margin-bottom: 20px;
+        }
+
+        .score-bar {
+            background: #4caf50;
+            color: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .score-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .timer {
+            background: white;
+            color: #4caf50;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .game-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .game-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 25px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .game-card:hover:not(.matched):not(:disabled) {
+            background: #e3f2fd;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .game-card.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #2196f3;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .game-card.matched {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border-color: #4caf50;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-row {
+                flex-direction: column;
+            }
+
+            .header-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <input type="text" id="titleInput" class="title-input" value="Diction, Tone & Sentence Structure Match">
+                <h1 id="titleDisplay" class="title-display hidden">Diction, Tone & Sentence Structure Match</h1>
+                <div class="btn-group">
+                    <button id="editBtn" class="btn btn-edit">
+                        ✏️ Editing
+                    </button>
+                    <button id="playBtn" class="btn btn-play">
+                        ▶️ Play Game
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editor Panel -->
+        <div id="editorPanel" class="editor-panel">
+            <h2 class="editor-title">Edit Pairs</h2>
+            
+            <!-- Add New Pair -->
+            <div class="add-pair-box">
+                <div class="add-pair-title">Add New Pair</div>
+                <div class="input-row">
+                    <input type="text" id="newLeft" class="input-field" placeholder="Left side (e.g., Definition)">
+                    <input type="text" id="newRight" class="input-field" placeholder="Right side (e.g., Term)">
+                    <button id="addBtn" class="btn btn-add">➕ Add</button>
+                </div>
+            </div>
+
+            <!-- Pairs List -->
+            <div id="pairsList" class="pairs-list"></div>
+        </div>
+
+        <!-- Game Panel -->
+        <div id="gamePanel" class="game-panel hidden">
+            <!-- Score Bar -->
+            <div class="score-bar">
+                <div class="score-text">Score: <span id="scoreDisplay">0</span> / <span id="totalPairs">0</span></div>
+                <div class="timer" id="timer">00:00</div>
+            </div>
+
+            <!-- Game Grid -->
+            <div class="game-grid">
+                <div id="leftColumn" class="game-column"></div>
+                <div id="rightColumn" class="game-column"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game data stored in memory
+        let pairs = [
+            { id: 1, left: 'Strong, powerful words', right: 'Diction' },
+            { id: 2, left: 'How the writer sounds', right: 'Tone' },
+            { id: 3, left: 'Mix of short and long sentences', right: 'Sentence Structure' },
+            { id: 4, left: 'Articles that convince readers', right: 'Opinion Editorial' }
+        ];
+
+        let isEditing = true;
+        let isPlaying = false;
+        let editingId = null;
+        let nextId = 5;
+
+        // Game state
+        let selectedLeft = null;
+        let selectedRight = null;
+        let matched = [];
+        let score = 0;
+        let timer = 0;
+        let timerInterval = null;
+
+        // Get elements
+        const titleInput = document.getElementById('titleInput');
+        const titleDisplay = document.getElementById('titleDisplay');
+        const editBtn = document.getElementById('editBtn');
+        const playBtn = document.getElementById('playBtn');
+        const editorPanel = document.getElementById('editorPanel');
+        const gamePanel = document.getElementById('gamePanel');
+        const newLeft = document.getElementById('newLeft');
+        const newRight = document.getElementById('newRight');
+        const addBtn = document.getElementById('addBtn');
+        const pairsList = document.getElementById('pairsList');
+        const leftColumn = document.getElementById('leftColumn');
+        const rightColumn = document.getElementById('rightColumn');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const totalPairs = document.getElementById('totalPairs');
+        const timerDisplay = document.getElementById('timer');
+
+        // Initialize
+        renderPairs();
+
+        // Add pair
+        addBtn.addEventListener('click', addPair);
+        newLeft.addEventListener('keypress', (e) => e.key === 'Enter' && addPair());
+        newRight.addEventListener('keypress', (e) => e.key === 'Enter' && addPair());
+
+        function addPair() {
+            const left = newLeft.value.trim();
+            const right = newRight.value.trim();
+            
+            if (left && right) {
+                pairs.push({ id: nextId++, left, right });
+                newLeft.value = '';
+                newRight.value = '';
+                renderPairs();
+            }
+        }
+
+        // Render pairs list
+        function renderPairs() {
+            if (pairs.length === 0) {
+                pairsList.innerHTML = '<div class="empty-message">No pairs yet. Add some above!</div>';
+                return;
+            }
+
+            pairsList.innerHTML = pairs.map(pair => `
+                <div class="pair-item" data-id="${pair.id}">
+                    ${editingId === pair.id ? `
+                        <input type="text" class="input-field" id="editLeft${pair.id}" value="${pair.left}">
+                        <span class="pair-arrow">→</span>
+                        <input type="text" class="input-field" id="editRight${pair.id}" value="${pair.right}">
+                        <button class="btn btn-save" onclick="saveEdit(${pair.id})">✓</button>
+                        <button class="btn btn-cancel" onclick="cancelEdit()">✕</button>
+                    ` : `
+                        <div class="pair-text">${pair.left}</div>
+                        <span class="pair-arrow">→</span>
+                        <div class="pair-text">${pair.right}</div>
+                        <button class="btn btn-edit-pair" onclick="startEdit(${pair.id})">✏️</button>
+                        <button class="btn btn-delete" onclick="deletePair(${pair.id})">🗑️</button>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        // Edit functions
+        function startEdit(id) {
+            editingId = id;
+            renderPairs();
+        }
+
+        function saveEdit(id) {
+            const left = document.getElementById(`editLeft${id}`).value.trim();
+            const right = document.getElementById(`editRight${id}`).value.trim();
+            
+            if (left && right) {
+                const pair = pairs.find(p => p.id === id);
+                pair.left = left;
+                pair.right = right;
+                editingId = null;
+                renderPairs();
+            }
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            renderPairs();
+        }
+
+        function deletePair(id) {
+            pairs = pairs.filter(p => p.id !== id);
+            renderPairs();
+        }
+
+        // Toggle edit mode
+        editBtn.addEventListener('click', () => {
+            isEditing = !isEditing;
+            if (isEditing) {
+                editorPanel.classList.remove('hidden');
+                titleInput.classList.remove('hidden');
+                titleDisplay.classList.add('hidden');
+                editBtn.textContent = '✏️ Editing';
+                editBtn.className = 'btn btn-edit';
+            } else {
+                editorPanel.classList.add('hidden');
+                titleInput.classList.add('hidden');
+                titleDisplay.classList.remove('hidden');
+                titleDisplay.textContent = titleInput.value;
+                editBtn.textContent = '✏️ Edit Mode';
+                editBtn.className = 'btn';
+                editBtn.style.background = '#e0e0e0';
+                editBtn.style.color = '#333';
+            }
+        });
+
+        // Play game
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopGame();
+            } else {
+                startGame();
+            }
+        });
+
+        function startGame() {
+            if (pairs.length < 2) {
+                alert('Please add at least 2 pairs to play!');
+                return;
+            }
+
+            isPlaying = true;
+            editorPanel.classList.add('hidden');
+            gamePanel.classList.remove('hidden');
+            titleInput.classList.add('hidden');
+            titleDisplay.classList.remove('hidden');
+            titleDisplay.textContent = titleInput.value;
+            editBtn.classList.add('hidden');
+            playBtn.textContent = '✕ Stop Game';
+            playBtn.className = 'btn btn-stop';
+
+            // Initialize game
+            selectedLeft = null;
+            selectedRight = null;
+            matched = [];
+            score = 0;
+            timer = 0;
+            scoreDisplay.textContent = score;
+            totalPairs.textContent = pairs.length;
+            
+            // Shuffle and render cards
+            const shuffledLeft = shuffle([...pairs]);
+            const shuffledRight = shuffle([...pairs]);
+            
+            leftColumn.innerHTML = shuffledLeft.map(pair => `
+                <button class="game-card" data-id="${pair.id}" onclick="selectLeft(${pair.id})">
+                    ${pair.left}
+                </button>
+            `).join('');
+            
+            rightColumn.innerHTML = shuffledRight.map(pair => `
+                <button class="game-card" data-id="${pair.id}" onclick="selectRight(${pair.id})">
+                    ${pair.right}
+                </button>
+            `).join('');
+
+            // Start timer
+            timerInterval = setInterval(() => {
+                timer++;
+                const mins = Math.floor(timer / 60);
+                const secs = timer % 60;
+                timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopGame() {
+            isPlaying = false;
+            gamePanel.classList.add('hidden');
+            editorPanel.classList.remove('hidden');
+            titleInput.classList.remove('hidden');
+            titleDisplay.classList.add('hidden');
+            editBtn.classList.remove('hidden');
+            playBtn.textContent = '▶️ Play Game';
+            playBtn.className = 'btn btn-play';
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+        }
+
+        function selectLeft(id) {
+            if (matched.includes(id)) return;
+            
+            // Clear previous selection
+            document.querySelectorAll('#leftColumn .game-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Select new card
+            const card = document.querySelector(`#leftColumn .game-card[data-id="${id}"]`);
+            card.classList.add('selected');
+            selectedLeft = id;
+            
+            // Check match if both selected
+            if (selectedRight !== null) {
+                checkMatch();
+            }
+        }
+
+        function selectRight(id) {
+            if (matched.includes(id)) return;
+            
+            // Clear previous selection
+            document.querySelectorAll('#rightColumn .game-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Select new card
+            const card = document.querySelector(`#rightColumn .game-card[data-id="${id}"]`);
+            card.classList.add('selected');
+            selectedRight = id;
+            
+            // Check match if both selected
+            if (selectedLeft !== null) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            if (selectedLeft === selectedRight) {
+                // Correct match
+                matched.push(selectedLeft);
+                score++;
+                scoreDisplay.textContent = score;
+                
+                // Mark as matched
+                document.querySelector(`#leftColumn .game-card[data-id="${selectedLeft}"]`).classList.add('matched');
+                document.querySelector(`#rightColumn .game-card[data-id="${selectedRight}"]`).classList.add('matched');
+                
+                selectedLeft = null;
+                selectedRight = null;
+                
+                // Check if game complete
+                if (matched.length === pairs.length) {
+                    clearInterval(timerInterval);
+                    setTimeout(() => {
+                        alert(`Congratulations! You completed the game in ${timerDisplay.textContent}!`);
+                        stopGame();
+                    }, 500);
+                }
+            } else {
+                // Wrong match
+                setTimeout(() => {
+                    document.querySelectorAll('.game-card.selected').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    selectedLeft = null;
+                    selectedRight = null;
+                }, 1000);
+            }
+        }
+
+        function shuffle(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+    </script>
+</body>
+</html>
