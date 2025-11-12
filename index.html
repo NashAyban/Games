@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matching Type Game Editor</title>
+    <title>Fairy Matching Type Game Editor</title>
     <style>
         * {
             margin: 0;
@@ -11,11 +11,43 @@
             box-sizing: border-box;
         }
 
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Quicksand:wght@400;600;700&display=swap');
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #f3e5f5 0%, #e0f2f1 50%, #f1f8e9 100%);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating sparkles */
+        body::before {
+            content: '✨';
+            position: fixed;
+            animation: float 6s ease-in-out infinite;
+            font-size: 24px;
+            opacity: 0.6;
+            top: 10%;
+            left: 5%;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '🧚';
+            position: fixed;
+            animation: float 8s ease-in-out infinite reverse;
+            font-size: 32px;
+            opacity: 0.5;
+            bottom: 15%;
+            right: 5%;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
         }
 
         .container {
@@ -24,11 +56,22 @@
         }
 
         .header {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #d8bfd8 0%, #e6ccff 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(186, 85, 211, 0.25);
             padding: 30px;
             margin-bottom: 20px;
+            border: 2px solid #da70d6;
+            position: relative;
+        }
+
+        .header::before {
+            content: '✨';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 20px;
+            opacity: 0.7;
         }
 
         .header-content {
@@ -39,20 +82,23 @@
         }
 
         .title-input {
+            font-family: 'Playfair Display', serif;
             font-size: 28px;
             font-weight: bold;
-            color: #333;
+            color: #5a2d82;
             border: none;
-            border-bottom: 3px solid #4caf50;
+            border-bottom: 3px solid #da70d6;
             padding: 5px;
             flex: 1;
             outline: none;
+            background: transparent;
         }
 
         .title-display {
+            font-family: 'Playfair Display', serif;
             font-size: 28px;
             font-weight: bold;
-            color: #333;
+            color: #5a2d82;
             flex: 1;
         }
 
@@ -64,7 +110,7 @@
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 25px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -72,102 +118,112 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-family: 'Quicksand', sans-serif;
         }
 
         .btn-edit {
-            background: #4caf50;
+            background: linear-gradient(135deg, #ce93d8 0%, #da70d6 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(218, 112, 214, 0.3);
         }
 
         .btn-edit:hover {
-            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(218, 112, 214, 0.4);
         }
 
         .btn-play {
-            background: #2196f3;
+            background: linear-gradient(135deg, #80deea 0%, #4dd0e1 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(77, 208, 225, 0.3);
         }
 
         .btn-play:hover {
-            background: #1976d2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(77, 208, 225, 0.4);
         }
 
         .btn-stop {
-            background: #f44336;
+            background: linear-gradient(135deg, #ff9999 0%, #ff7e7e 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(255, 126, 126, 0.3);
         }
 
         .btn-stop:hover {
-            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 126, 126, 0.4);
         }
 
         .btn-add {
-            background: #4caf50;
+            background: linear-gradient(135deg, #ce93d8 0%, #da70d6 100%);
             color: white;
         }
 
         .btn-add:hover {
-            background: #45a049;
+            transform: scale(1.05);
         }
 
         .btn-delete {
-            background: #f44336;
-            color: white;
+            background: #ffb3ba;
+            color: #7d0000;
             padding: 8px 12px;
         }
 
         .btn-delete:hover {
-            background: #d32f2f;
+            background: #ff8a94;
         }
 
         .btn-edit-pair {
-            background: #2196f3;
-            color: white;
+            background: #80deea;
+            color: #006064;
             padding: 8px 12px;
         }
 
         .btn-edit-pair:hover {
-            background: #1976d2;
+            background: #4dd0e1;
         }
 
         .btn-save {
-            background: #4caf50;
-            color: white;
+            background: #a5d6a7;
+            color: #1b5e20;
             padding: 8px 12px;
         }
 
         .btn-cancel {
-            background: #757575;
-            color: white;
+            background: #ef9a9a;
+            color: #5d0000;
             padding: 8px 12px;
         }
 
         .editor-panel {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, rgba(230, 204, 255, 0.8) 0%, rgba(224, 242, 241, 0.8) 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 20px;
+            border: 2px solid #e0b0e6;
+            backdrop-filter: blur(10px);
         }
 
         .editor-title {
+            font-family: 'Playfair Display', serif;
             font-size: 22px;
             font-weight: bold;
-            color: #333;
+            color: #5a2d82;
             margin-bottom: 20px;
         }
 
         .add-pair-box {
-            background: #e8f5e9;
-            border: 2px solid #4caf50;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #f3e5f5 0%, #e0f7fa 100%);
+            border: 2px solid #da70d6;
+            border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
         }
 
         .add-pair-title {
             font-weight: 600;
-            color: #333;
+            color: #5a2d82;
             margin-bottom: 15px;
         }
 
@@ -180,15 +236,17 @@
         .input-field {
             flex: 1;
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #e0b0e6;
+            border-radius: 12px;
             font-size: 16px;
             outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Quicksand', sans-serif;
         }
 
         .input-field:focus {
-            border-color: #4caf50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            border-color: #da70d6;
+            box-shadow: 0 0 0 3px rgba(218, 112, 214, 0.15);
         }
 
         .pairs-list {
@@ -198,29 +256,31 @@
         }
 
         .pair-item {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+            border: 2px solid #e0b0e6;
+            border-radius: 15px;
             padding: 20px;
             display: flex;
             gap: 15px;
             align-items: center;
+            box-shadow: 0 4px 12px rgba(218, 112, 214, 0.15);
         }
 
         .pair-text {
             flex: 1;
             font-weight: 500;
-            color: #333;
+            color: #4a235a;
         }
 
         .pair-arrow {
-            color: #999;
+            color: #ce93d8;
             font-size: 20px;
+            font-weight: bold;
         }
 
         .empty-message {
             text-align: center;
-            color: #999;
+            color: #b39ddb;
             padding: 40px;
             font-size: 18px;
         }
@@ -230,29 +290,31 @@
         }
 
         .score-bar {
-            background: #4caf50;
+            background: linear-gradient(135deg, #ce93d8 0%, #da70d6 100%);
             color: white;
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(218, 112, 214, 0.3);
         }
 
         .score-text {
             font-size: 24px;
             font-weight: bold;
+            font-family: 'Playfair Display', serif;
         }
 
         .timer {
             background: white;
-            color: #4caf50;
+            color: #da70d6;
             padding: 12px 30px;
             border-radius: 50px;
             font-size: 24px;
             font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .game-grid {
@@ -268,40 +330,155 @@
         }
 
         .game-card {
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+            border: 3px solid #ce93d8;
+            border-radius: 15px;
             padding: 25px;
             font-size: 18px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             text-align: left;
+            color: #5a2d82;
+            font-family: 'Quicksand', sans-serif;
+            box-shadow: 0 4px 12px rgba(218, 112, 214, 0.2);
         }
 
         .game-card:hover:not(.matched):not(:disabled) {
-            background: #e3f2fd;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #f3e5f5 0%, #e0f7fa 100%);
+            box-shadow: 0 6px 16px rgba(218, 112, 214, 0.3);
+            transform: translateY(-3px);
         }
 
         .game-card.selected {
-            background: #2196f3;
+            background: linear-gradient(135deg, #da70d6 0%, #ce93d8 100%);
             color: white;
-            border-color: #2196f3;
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(33, 150, 243, 0.3);
+            border-color: #ba68c8;
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(218, 112, 214, 0.4);
         }
 
         .game-card.matched {
-            background: #c8e6c9;
-            color: #2e7d32;
-            border-color: #4caf50;
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+            color: #1b5e20;
+            border-color: #81c784;
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.7;
+            box-shadow: 0 4px 12px rgba(129, 199, 132, 0.3);
         }
 
         .hidden {
             display: none;
+        }
+
+        @keyframes pixieDust {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        .pixie-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            animation: pixieDust 1.2s ease-out forwards;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-overlay:not(.hidden) {
+            display: flex; /* ✅ visible when .hidden is removed */
+        }
+
+        /* Optional: define your .hidden class (useful for other elements too) */
+        .hidden {
+            display: none !important;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e0f7fa 100%);
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(218, 112, 214, 0.4);
+            text-align: center;
+            max-width: 500px;
+            border: 3px solid #da70d6;
+            animation: modalPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes modalPop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-emoji {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: bold;
+            color: #5a2d82;
+            margin-bottom: 20px;
+        }
+
+        .modal-message {
+            font-size: 18px;
+            color: #4a235a;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .modal-time {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ce93d8;
+            margin-bottom: 30px;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, #ce93d8 0%, #da70d6 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+            box-shadow: 0 4px 12px rgba(218, 112, 214, 0.3);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(218, 112, 214, 0.4);
         }
 
         @media (max-width: 768px) {
@@ -339,11 +516,11 @@
 
         <!-- Editor Panel -->
         <div id="editorPanel" class="editor-panel">
-            <h2 class="editor-title">Edit Pairs</h2>
+            <h2 class="editor-title">✨ Edit Pairs ✨</h2>
             
             <!-- Add New Pair -->
             <div class="add-pair-box">
-                <div class="add-pair-title">Add New Pair</div>
+                <div class="add-pair-title">🧚 Add New Pair</div>
                 <div class="input-row">
                     <input type="text" id="newLeft" class="input-field" placeholder="Left side (e.g., Definition)">
                     <input type="text" id="newRight" class="input-field" placeholder="Right side (e.g., Term)">
@@ -359,7 +536,7 @@
         <div id="gamePanel" class="game-panel hidden">
             <!-- Score Bar -->
             <div class="score-bar">
-                <div class="score-text">Score: <span id="scoreDisplay">0</span> / <span id="totalPairs">0</span></div>
+                <div class="score-text">🌟 Score: <span id="scoreDisplay">0</span> / <span id="totalPairs">0</span></div>
                 <div class="timer" id="timer">00:00</div>
             </div>
 
@@ -369,21 +546,34 @@
                 <div id="rightColumn" class="game-column"></div>
             </div>
         </div>
+
+        <!-- Completion Modal -->
+        <div id="completionModal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-emoji">🧚✨</div>
+                <h2 class="modal-title">Fairy Magic Complete!</h2>
+                <p class="modal-message" id="modalMessage"></p>
+                <div class="modal-time">Time: <span id="modalTime">00:00</span></div>
+                <button class="modal-btn" onclick="closeModal()">✨ Play Again ✨</button>
+            </div>
+        </div>
     </div>
 
     <script>
         // Game data stored in memory
         let pairs = [
-            { id: 1, left: 'Strong, powerful words', right: 'Diction' },
-            { id: 2, left: 'How the writer sounds', right: 'Tone' },
-            { id: 3, left: 'Mix of short and long sentences', right: 'Sentence Structure' },
-            { id: 4, left: 'Articles that convince readers', right: 'Opinion Editorial' }
+            { id: 1, left: 'Style', right: 'The way a writer expresses ideas using words and sentences' },
+            { id: 2, left: 'Diction', right: 'The writer\'s choice of words to create meaning or effect' },
+            { id: 3, left: 'Tone', right: 'The writer\'s attitude or feeling about the topic or audience' },
+            { id: 4, left: 'Formal Style', right: 'Uses formal or academic language; avoids slang or contractions' },
+            { id: 5, left: 'Informal Style', right: 'Sounds friendly, casual, and conversational' },
+            { id: 6, left: 'Purpose of an Opinion Editorial', right: 'To persuade readers to agree with the writer\'s opinion or consider a new point of view' }
         ];
 
         let isEditing = true;
         let isPlaying = false;
         let editingId = null;
-        let nextId = 5;
+        let nextId = 7;
 
         // Game state
         let selectedLeft = null;
@@ -433,7 +623,7 @@
         // Render pairs list
         function renderPairs() {
             if (pairs.length === 0) {
-                pairsList.innerHTML = '<div class="empty-message">No pairs yet. Add some above!</div>';
+                pairsList.innerHTML = '<div class="empty-message">✨ No pairs yet. Add some above! ✨</div>';
                 return;
             }
 
@@ -501,8 +691,8 @@
                 titleDisplay.textContent = titleInput.value;
                 editBtn.textContent = '✏️ Edit Mode';
                 editBtn.className = 'btn';
-                editBtn.style.background = '#e0e0e0';
-                editBtn.style.color = '#333';
+                editBtn.style.background = '#e0b0e6';
+                editBtn.style.color = '#5a2d82';
             }
         });
 
@@ -540,7 +730,7 @@
             scoreDisplay.textContent = score;
             totalPairs.textContent = pairs.length;
             
-            // Shuffle BOTH columns independently - this creates the scrambled effect!
+            // Shuffle BOTH columns independently
             const shuffledLeft = shuffle([...pairs]);
             const shuffledRight = shuffle([...pairs]);
             
@@ -578,6 +768,9 @@
             if (timerInterval) {
                 clearInterval(timerInterval);
             }
+            
+            // Clear any lingering pixie particles
+            document.querySelectorAll('.pixie-particle').forEach(p => p.remove());
         }
 
         function selectLeft(id) {
@@ -625,9 +818,16 @@
                 score++;
                 scoreDisplay.textContent = score;
                 
+                // Create pixie dust effect
+                const leftCard = document.querySelector(`#leftColumn .game-card[data-id="${selectedLeft}"]`);
+                const rightCard = document.querySelector(`#rightColumn .game-card[data-id="${selectedRight}"]`);
+                
+                createPixieDust(leftCard);
+                createPixieDust(rightCard);
+                
                 // Mark as matched
-                document.querySelector(`#leftColumn .game-card[data-id="${selectedLeft}"]`).classList.add('matched');
-                document.querySelector(`#rightColumn .game-card[data-id="${selectedRight}"]`).classList.add('matched');
+                leftCard.classList.add('matched');
+                rightCard.classList.add('matched');
                 
                 selectedLeft = null;
                 selectedRight = null;
@@ -636,8 +836,7 @@
                 if (matched.length === pairs.length) {
                     clearInterval(timerInterval);
                     setTimeout(() => {
-                        alert(`Congratulations! You completed the game in ${timerDisplay.textContent}!`);
-                        stopGame();
+                        showCompletionModal(timerDisplay.textContent);
                     }, 500);
                 }
             } else {
@@ -649,6 +848,65 @@
                     selectedLeft = null;
                     selectedRight = null;
                 }, 1000);
+            }
+        }
+
+        const fairyMessages = [
+            "You've sprinkled fairy dust across the realm! Absolutely enchanting! 🌟",
+            "The fairy folk are impressed! Your matching magic is legendary! 🧚",
+            "You've unlocked the ancient fairy knowledge! Well done, wizard! ✨",
+            "The mushroom circle glows with approval of your brilliance! 🍄",
+            "You've earned your fairy wings! Flight awaits! 🪶",
+            "The forest creatures celebrate your victory! Huzzah! 🦌",
+            "You're now an honorary member of the Fairy Academy! 📚✨",
+            "The fairy queen declares you a master of matching! 👑",
+            "You've completed the fairy quest! Legend status unlocked! ⚔️",
+            "The pixies are doing loop-de-loops for joy! Pure magic! 🎪"
+        ];
+
+        function showCompletionModal(time) {
+            const modal = document.getElementById('completionModal');
+            const messageEl = document.getElementById('modalMessage');
+            const timeEl = document.getElementById('modalTime');
+            
+            const randomMessage = fairyMessages[Math.floor(Math.random() * fairyMessages.length)];
+            messageEl.textContent = randomMessage;
+            timeEl.textContent = time;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('completionModal');
+            modal.classList.add('hidden');
+            stopGame();
+        }
+
+        function createPixieDust(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const particles = 12;
+            const symbols = ['✨', '🧚', '💫', '⭐'];
+            
+            for (let i = 0; i < particles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'pixie-particle';
+                particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                
+                const angle = (i / particles) * Math.PI * 2;
+                const velocity = 80 + Math.random() * 60;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+                
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 1200);
             }
         }
 
